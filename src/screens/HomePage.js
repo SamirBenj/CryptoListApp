@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
-import {View,StyleSheet,Text,Image, ImageBackground, ScrollView, FlatList, Button} from 'react-native';
+import {View,StyleSheet,Text,Image, ImageBackground, ScrollView, FlatList, Button,TouchableOpacity, Pressable} from 'react-native';
 import ItemRow from '../components/items';
 import { useState } from 'react';
 import axios from 'axios';
 
 
-const HomePage = () => {
+const HomePage = ({navigation}) => {
   const [isLoading,setIsLoading] = useState(false);
   // https://pro-api.coinmarketcap.com/v1/cryptocurrency/map
  const url ="https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
@@ -35,6 +35,7 @@ const HomePage = () => {
                   const data = await response.data;
                   // console.log(response.data);
                   // console.log(data.data[0]['name'])
+                  console.log(data)
                   setData(data.data);
                 // e57341d0-1e2a-4b46-8091-1de011804232
                 setIsLoading(true);
@@ -57,7 +58,7 @@ const HomePage = () => {
                     <Text style={{fontSize:20, color:'white',marginTop:20}}>
                         22000 $
                     </Text>
-                    <Button  title='Test' onPress={showData}></Button>
+                    {/* <Pressable  title='Test' onPress={()=>{navigation.navigate('DetailsPage')}}><Text>hello</Text></Pressable> */}
                     {/* isShowWidget ?? <Text>hello</Text> */}
                     {isShowWidget ?<Text>Bonjour</Text>:<Text>Hel</Text>}
                 </View>
@@ -67,7 +68,18 @@ const HomePage = () => {
                         <View>
                             <FlatList                             
                             data={data ?? 0}
-                            renderItem={(item)=><ItemRow item={item}></ItemRow>}>
+                            renderItem={(item)=>
+                            <Pressable 
+                            onPress={()=>{
+                            navigation.navigate('DetailsPage',{
+                              nomCrypto:item.item.slug,
+                              price:item.item.quote.USD.price,
+                              id:item.item.id
+                            }
+                            )}}>
+                              <ItemRow item={item}></ItemRow>
+                            </Pressable>
+                              }>
                             </FlatList>
                         </View>
                     {/* </ScrollView> */}
